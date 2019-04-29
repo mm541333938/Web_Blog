@@ -61,6 +61,17 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <!--验证码-->
+    <servlet>
+        <servlet-name>CaptchaServlet</servlet-name>
+        <servlet-class>pluto1024.www.common.CodeCapchaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CaptchaServlet</servlet-name>
+        <url-pattern>/captchaServlet</url-pattern>
+    </servlet-mapping>
+
+
     <!-- 指明对于如下资源文件不采用spring的过滤器 -->
     <servlet-mapping>
         <servlet-name>default</servlet-name>

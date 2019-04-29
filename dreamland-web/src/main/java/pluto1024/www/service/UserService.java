@@ -33,12 +33,12 @@ public interface UserService {
     User findByEmail(String email);
 
     /**
-     * 根据用户邮箱查询用户
+     * 根据用户手机号查询用户
      *
      * @param phone
      * @return
      */
-    User findByEail(String phone);
+    User findByPhone(String phone);
 
     /**
      * 根据id查询用户
