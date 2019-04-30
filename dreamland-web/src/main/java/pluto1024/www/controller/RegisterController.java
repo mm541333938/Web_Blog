@@ -6,6 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import pluto1024.www.common.CodeCaptchaServlet;
 import pluto1024.www.entity.User;
 import pluto1024.www.service.UserService;
 
@@ -34,6 +37,26 @@ public class RegisterController {
             map.put("message", "success");
         } else {
             //手机号已注册
+            map.put("message", "fail");
+        }
+        return map;
+    }
+
+
+    @RequestMapping("/checkCode")
+    @ResponseBody
+    public Map<String, Object> checkCode(Model model, @RequestParam(value = "code", required = false) String code) {
+        log.debug("注册-判断验证码" + code + "是否可用");
+        Map map = new HashMap<String, Object>();
+        //通过 ServletRequestAttributes 获取 Request 对象，然后通过 Request 获取 Session 对象
+        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        //通过 session.getAttribute 方法获取之前生成验证码时存入 session 中的验证码，赋值给 vcode
+        String vcode = (String) attrs.getRequest().getSession().getAttribute(CodeCaptchaServlet.VERCODE_KEY);
+        if (code.equals(vcode)) {
+            //验证码正确
+            map.put("message", "success");
+        } else {
+            //验证码错误
             map.put("message", "fail");
         }
         return map;

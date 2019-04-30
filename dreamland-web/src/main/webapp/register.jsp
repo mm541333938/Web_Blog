@@ -187,6 +187,37 @@
         $("#regist-right").height(hgt - 30);
     }
 
+    //验证码校验
+    var flag_c = false;
+
+    function checkCode() {
+        var code = $("#code").val();
+        //去空格
+        code = code.replace(/^\s+|\s+$/g, "");
+        if (code == "") {
+            $("#code_span").text("请输入验证码！").css("color", "red");
+            flag_c = false;
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '/checkCode',
+                data: {"code": code},
+                dataType: 'json',
+                success: function (data) {
+                    var val = data['message'];
+                    if (val == "success") {
+                        $("#code_span").text("√").css("color", "green");
+                        $("#reg_span").text("");
+                        flag_c = true;
+                    } else {
+                        $("#code_span").text("验证码错误！").css("color", "red");
+                        flag_c = false;
+                    }
+                }
+            });
+        }
+        return flag_c;
+    }
 
 </script>
 </html>
