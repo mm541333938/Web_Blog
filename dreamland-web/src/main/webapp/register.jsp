@@ -85,6 +85,8 @@
     var phoneWidth = parseInt(window.screen.width);
     var phoneScale = phoneWidth / 640;
     var ua = navigator.userAgent;
+
+
     if (/Android (\d+\.\d+)/.test(ua)) {
         var version = parseFloat(RegExp.$1);
         if (version > 2.3) {
@@ -99,6 +101,92 @@
     function changeCaptcha() {
         $("#captchaImg").attr('src', '${ctx}/captchaServlet?t=' + (new Date().getTime()));
     }
+
+    //效验手机号
+    var v = 0;
+    var flag2 = false;
+
+    function checkPhone() {
+        var phone = $("#phone").val();
+        phone = phone.replace(/^\s+|\s+$/g, "");
+        if (phone == "") {
+            $("#phone_span").text("请输入手机号!");
+            $("#phone_ok").text("");
+            var hgt = $("#regist-left").height();
+            if (v == 0) {
+                $("#regist-left").height(hgt + 30);
+                $("#regist-right").height(hgt + 30);
+                v++;
+            }
+            flag2 = false;
+        }
+        if (!(/^1[3|4|5|8|7][0-9]\d{8}$/.test(phone))) {
+            $("#phone_span").text("手机号非法,请重新输入!");
+            $("#phone_ok").text("");
+            var hgt = $("#regist-left").height();
+            if (v == 0) {
+                $("#regist-left").height(hgt + 30);
+                $("#regist-right").height(hgt + 30);
+                v++;
+            }
+            flag2 = false;
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '/checkPhone',
+                data: {"phone": phone},
+                dataType: 'json',
+                success: function (data) {
+                    var val = data['message'];
+                    if (val == "success") {
+                        $("#phone_span").text("");
+                        $("#reg_span").text("");
+                        $("#phone_ok").text("√").css("color", "green");
+
+                        var content = $("#phone_ok").text();
+                        if (content == "√") {
+                            var hgt = $("#regist-left").heigt();
+                            if (v == 1) {
+                                $("#regist-left").height(hgt - 30);
+                                $("#regist-right").height(hgt - 30);
+                            }
+                            v = 0;
+                        }
+                        flag2 = true;
+                    } else {
+                        $("#phone_span").text("该手机号已经注册！");
+                        $("#phone_ok").text("");
+                        var hgt = $("#regist-left").height();
+                        if (v == 0) {
+                            $("#regist-left").height(hgt + 30);
+                            $("#regist-right").height(hgt + 30);
+                            v++;
+                        }
+                        flag2 = false;
+                    }
+
+                }
+            });
+        }
+        return flag2;
+    }
+
+    //根据内容增加而增加高度
+    function increaseHeight() {
+
+        var hgt = $("#regist-left").height();
+        $("#regist-left").height(hgt + 30);
+        $("#regist-right").height(hgt + 30);
+
+    }
+
+    //根据内容减少而减少高度
+    function reduceHeight() {
+        var hgt = $("#regist-left").height();
+        $("#regist-left").height(hgt - 30);
+        $("#regist-right").height(hgt - 30);
+    }
+
 
 </script>
 </html>
