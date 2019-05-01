@@ -219,5 +219,32 @@
         return flag_c;
     }
 
+    //勾选永和协议校验
+    function checkProtocol() {
+        if ($('#protocol').prop("checked")) {
+            $("#reg_span").text("");
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    //提交注册信息
+    $("#to_register").click(function () {
+        if (!checkProtocol()) {
+            $("#protocol_span").text("请勾选\"阅读并接受梦境网用户协议\"！").css("color", "red");
+        } else {
+            $("#protocol_span").text("");
+        }
+
+        if (checkPhone() && checkPassword() && checkEmail() && checkNickName() && checkCode() && checkProtocol()) {
+            $("#registerForm").submit();
+        } else {
+            $("#reg_span").text("请将信息填写完整！").css("color", "red");
+        }
+
+    });
+
 </script>
 </html>

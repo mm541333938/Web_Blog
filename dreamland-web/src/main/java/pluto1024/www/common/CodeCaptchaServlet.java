@@ -21,18 +21,19 @@ import java.util.Random;
 public class CodeCaptchaServlet extends HttpServlet {
 
     public static final String VERCODE_KEY = "VERCODE_KEY";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-       // request.getSession().removeAttribute(LOGIN_VERCODE_KEY);
+
+        // request.getSession().removeAttribute(LOGIN_VERCODE_KEY);
         request.getSession().removeAttribute(VERCODE_KEY);
         // 首先设置页面不缓存
         response.setHeader("Pragma", "No-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
-        
-      //在内存中创建图象
+
+        //在内存中创建图象
         int iWidth = 55, iHeight = 18;
         BufferedImage image = new BufferedImage(iWidth, iHeight,
                 BufferedImage.TYPE_INT_RGB);
@@ -46,11 +47,11 @@ public class CodeCaptchaServlet extends HttpServlet {
         g.drawRect(0, 0, iWidth - 1, iHeight - 1);
         //取随机产生的认证码(4位数字)
         //String rand = Utils.getCharacterAndNumber(4);
-        int intCount=0; 
-        intCount=(new Random()).nextInt(9999);// 
+        int intCount = 0;
+        intCount = (new Random()).nextInt(9999);//
 
-        if(intCount <1000)intCount+=1000; 
-        String rand=intCount+"";
+        if (intCount < 1000) intCount += 1000;
+        String rand = intCount + "";
         //将认证码显示到图象中
         g.setColor(Color.black);
         g.setFont(new Font("Times New Roman", Font.PLAIN, 18));
@@ -62,9 +63,9 @@ public class CodeCaptchaServlet extends HttpServlet {
             int y = random.nextInt(iHeight);
             g.drawLine(x, y, x, y);
         }
-        
+
         // 将生成的随机字符串写入session
-       // request.getSession().setAttribute(LOGIN_VERCODE_KEY, rand);
+        // request.getSession().setAttribute(LOGIN_VERCODE_KEY, rand);
         request.getSession().setAttribute(VERCODE_KEY, rand);
         //图象生效
         g.dispose();
@@ -85,5 +86,5 @@ public class CodeCaptchaServlet extends HttpServlet {
     }
 
     private static final long serialVersionUID = 5413310437308046316L;
-    
+
 }
