@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import pluto1024.www.common.CodeCaptchaServlet;
+import pluto1024.www.common.Constants;
 import pluto1024.www.common.MD5Util;
 import pluto1024.www.entity.User;
 import pluto1024.www.mail.SendEmail;
@@ -108,7 +109,7 @@ public class RegisterController {
             user.setEnable("0");
             user.setImgUrl("/images/icon_m.jpg");
             //邮箱激活码
-            String validateCode = MD5Util.encodeToHex("salt" + email + password);
+            String validateCode = MD5Util.encodeToHex(Constants.SALT + email + password);
             redisTemplate.opsForValue().set(email, validateCode, 24, TimeUnit.HOURS);// 24小时 有效激活 redis保存激活码
 
             userService.regist(user);
@@ -125,13 +126,15 @@ public class RegisterController {
     public int checkValidateCode(String code) {
         ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         Object vercode = attrs.getRequest().getSession().getAttribute("VERCODE_KEY");
-        if (null == vercode) {
+
+        return Constants.isVerCode(vercode, code);
+        /*if (null == vercode) {
             return -1;
         }
         if (!code.equalsIgnoreCase(vercode.toString())) {
             return 0;
         }
-        return 1;
+        return 1;*/
     }
 
     @RequestMapping("/sendEmail")

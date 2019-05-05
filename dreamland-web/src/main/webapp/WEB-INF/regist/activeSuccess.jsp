@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>激活失败页面</title>
+    <title>激活成功页面</title>
     <link href="${ctx}/css/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="${ctx}/css/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"/>
 
@@ -40,7 +40,7 @@
             height: 150px;
             width: 1000px;
             text-align: center;
-            line-height: 180px;
+            line-height: 150px;
             margin-top: 50px;
         }
 
@@ -69,7 +69,7 @@
 <body>
 <div class="active-head">
     <div style="line-height: 44px;margin-left: 5px">
-        <span style="color: white;font-family: Arial;font-size: 18px">Dreamland - 梦境网激活失败页面</span>
+        <span style="color: white;font-family: Arial;font-size: 18px">Dreamland - 梦境网激活成功页面</span>
     </div>
     <div class="content">
         <div class="single-clear">
@@ -77,12 +77,12 @@
         </div>
 
         <div class="active-success">
-            <i class="icon-2x icon-times" style="color: red;"></i>&nbsp;&nbsp;&nbsp;<span style="font-size: 25px;color: red">抱歉,激活失败！</span><br/>
+            <i class="icon-2x icon-check-circle-o" style="color: green"></i>&nbsp;&nbsp;<span style="font-size: 25px;color: green">恭喜激活成功！</span><br/>
 
         </div>
-        <div style="margin-left: 390px"> <span style="font-size: 17px;">${fail}</span></div>
+        <div style="margin-left: 340px"> <span style="font-size: 17px;">您登陆梦境网的用户名为：<span style="color: green;font-weight: bold">${email}</span></span></div>
         <div style="margin-left: 420px;margin-top: 40px">
-            <button class="btn btn-primary" type="button"  id="btn" style="width: 150px">点此注册</button>
+            <button class="btn btn-primary" type="button" id="btn" style="width: 150px">点此登陆</button>
         </div>
 
 
@@ -162,7 +162,7 @@
                         <a href="http://www.dreamland.wang" onMouseOut="hideImg()"  onmouseover="showImg()">
                             微信
                             <div id="wxImg" style="display:none;height:50px;back-ground:#f00;position:absolute;">
-                                <img src="../images/dreamland.png"/><br/>
+                                <img src="../../images/dreamland.png"/><br/>
                                 手机扫描二维码关注
                             </div>
                             <!-- <div class="foot-wechat-tips">
@@ -216,9 +216,8 @@
     function hideImg(){
         document.getElementById("wxImg").style.display='none';
     }
-
     $("#btn").click(function () {
-        location.href="${ctx}/register";
+        location.href="${ctx}/login";
     });
 </script>
 </html>

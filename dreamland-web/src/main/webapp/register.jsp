@@ -21,7 +21,7 @@
 <div class="zhuce_body">
     <div class="zhuce_kong" id="dre_div">
         <div class="zc">
-            <div class="bj_bai" style="height: 408px">
+            <div class="bj_bai" style="height: 478px">
                 <h3>欢迎注册</h3>
                 <form action="${ctx}/doRegister" method="post" id="registerForm">
                     <span id="reg_span"></span>
@@ -63,7 +63,7 @@
 
                 </form>
             </div>
-            <div class="bj_right" style="height: 408px">
+            <div class="bj_right" style="height: 478px">
                 <p>使用以下账号直接登录</p>
                 <a href="#" class="zhuce_qq">QQ注册</a>
                 <a href="#" class="zhuce_wb">微博注册</a>
