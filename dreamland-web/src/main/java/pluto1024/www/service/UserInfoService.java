@@ -2,13 +2,12 @@ package pluto1024.www.service;
 
 import pluto1024.www.entity.UserInfo;
 
-/**
- * Created by 12903 on 2018/4/16.
- */
+
 public interface UserInfoService {
 
     /**
      * 根据用户id查找用户详细信息
+     *
      * @param id
      * @return
      */
@@ -16,12 +15,14 @@ public interface UserInfoService {
 
     /**
      * 更新用户详细信息
+     *
      * @param userInfo
      */
     void update(UserInfo userInfo);
 
     /**
      * 添加用户详细新
+     *
      * @param userInfo
      */
     void add(UserInfo userInfo);

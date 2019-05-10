@@ -1,20 +1,20 @@
 package pluto1024.www.common;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by wly on 2018/3/7.
- */
+
 public class MD5Util {
 
     /**
      * 将源字符串通过MD5进行加密为字节数组
+     *
      * @param source
      * @return
      */
     public static byte[] encodeToBytes(String source) {
-        byte[] result  = null;
+        byte[] result = null;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.reset();//重置
@@ -30,6 +30,7 @@ public class MD5Util {
 
     /**
      * 将源字符串通过MD5加密成32位16进制数
+     *
      * @param source
      * @return
      */
@@ -48,21 +49,22 @@ public class MD5Util {
 
     /**
      * 验证字符串是否匹配
-     * @param unknown	待验证的字符串
-     * @param okHex		使用MD5加密后的16进制字符串
+     *
+     * @param unknown 待验证的字符串
+     * @param okHex   使用MD5加密后的16进制字符串
      * @return
      */
-    public static boolean validate(String unknown , String okHex) {
+    public static boolean validate(String unknown, String okHex) {
         return okHex.equals(encodeToHex(unknown));
     }
 
     public static void main(String[] args) {
         String email = "dreamlandwang@163.com";
         String password = "123456";
-        String s = encodeToHex( email+password );
+        String s = encodeToHex(email + password);
         System.out.println(s);
 
-        boolean validate = validate( email+password, s );
+        boolean validate = validate(email + password, s);
         System.out.println(validate);
 
         String em = encodeToHex("123456");
