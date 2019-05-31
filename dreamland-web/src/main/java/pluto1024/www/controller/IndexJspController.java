@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import pluto1024.www.common.PageHelper;
+import pluto1024.www.common.PageHelper.*;
 import pluto1024.www.entity.User;
 import pluto1024.www.entity.UserContent;
 
@@ -23,7 +23,7 @@ public class IndexJspController extends BaseController {
         if (user != null) {
             model.addAttribute("user", user);
         }
-        PageHelper.Page<UserContent> page = findAll(null, pageNum, pageSize);
+        Page<UserContent> page = findAll(null, pageNum, pageSize);
         model.addAttribute("page", page);
         return "../index";
     }
