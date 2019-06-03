@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="ctx" value="${pageContext.request.contextPath }"/>
@@ -17,68 +17,87 @@
     <link rel="stylesheet" href="${ctx}/css/reply/css/comment.css">
 
     <style>
-        body,html{
+        body, html {
             background-color: #EBEBEB;
             padding: 0;
             margin: 0;
-            height:100%;
-        }
-        .stats-buttons  a{
-            text-decoration:none;
-        }
-        .commentAll a{
-            text-decoration:none;
+            height: 100%;
         }
 
-        .comment-show a{
-            text-decoration:none;
+        .stats-buttons a {
+            text-decoration: none;
         }
+
+        .commentAll a {
+            text-decoration: none;
+        }
+
+        .comment-show a {
+            text-decoration: none;
+        }
+
         a {
             color: inherit;
             outline: 0;
         }
+
         a:-webkit-any-link {
             cursor: pointer;
 
         }
-        .container{
-            min-height:100%;
+
+        .container {
+            min-height: 100%;
             position: relative;
 
         }
-        #content{
-            min-height:100%;
+
+        #content {
+            min-height: 100%;
             position: relative;
         }
-        .col-md-9{
+
+        .col-md-9 {
             padding-bottom: 80px;
         }
-        .content-text{
+
+        .content-text {
             padding: 20px;
 
         }
-        .single-share{
+
+        .single-share {
             float: right;
         }
+
         .stats-buttons {
             float: left;
         }
-        .foot-nav-col li{
+
+        .foot-nav-col li {
             list-style: none;
             margin-left: 100px;
         }
-        .foot-nav-col h3{
-            margin-left:120px;
+
+        .foot-nav-col h3 {
+            margin-left: 120px;
         }
-        .foot-nav-col a{
-            text-decoration:none;
-            color:grey;
+
+        .foot-nav-col a {
+            text-decoration: none;
+            color: grey;
 
         }
-        .foot-nav-col a:link,a:visited { color:grey;}
-        .foot-nav-col a:hover,a:active { color: #6318ff;}
 
-        .foot-nav-col{
+        .foot-nav-col a:link, a:visited {
+            color: grey;
+        }
+
+        .foot-nav-col a:hover, a:active {
+            color: #6318ff;
+        }
+
+        .foot-nav-col {
             margin-top: 20px;
             float: left;
         }
@@ -90,9 +109,11 @@
             padding: 0;
             margin-right: 10px;
         }
+
         fieldset, img {
             border: 0;
         }
+
         .author a, .author span {
             float: left;
             font-size: 14px;
@@ -114,7 +135,7 @@
             font-weight: 400;
         }
 
-        .commentAll{
+        .commentAll {
             margin-left: 5px;
         }
 
@@ -132,7 +153,8 @@
             <a name="tj_login" class="lb" href="register" style="color: black">[注册]</a>
         </c:if>
         <c:if test="${not empty user}">
-            <a name="tj_loginp" href="javascript:void(0);"   class="lb" onclick="personal('${user.id}');" style="color: black"><font color="#9370db">${user.nickName}, 欢迎您！</font></a>
+            <a name="tj_loginp" href="javascript:void(0);" class="lb" onclick="personal('${user.id}');"
+               style="color: black"><font color="#9370db">${user.nickName}, 欢迎您！</font></a>
             &nbsp;&nbsp;
             <a name="tj_login" class="lb" href="${ctx}/loginout" style="color: black">[退出]</a>
         </c:if>
@@ -140,11 +162,11 @@
     </div>
 
 
-
     <nav class="navbar navbar-inverse">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu"
+                    aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -174,7 +196,7 @@
     </nav>
 
     <div id="content" class="row-fluid">
-        <div class="col-md-9"  style="background-color: white;">
+        <div class="col-md-9" style="background-color: white;">
             <div id="content_col" class="content-main">
 
                 <c:forEach var="cont" items="${page.result}" varStatus="i">
@@ -203,18 +225,20 @@
                             <span class="stats-vote"><i id="${cont.id}" class="number">${cont.upvote}</i> 赞</span>
                             <span class="stats-comments">
                     <span class="dash"> · </span>
-                         <a  onclick="reply(${cont.id},${cont.uId});">
+                         <a onclick="reply(${cont.id},${cont.uId});">
                               <i class="number" id="comment_num_${cont.id}">${cont.commentNum}</i> 评论
                           </a>
                     </span>
                         </div>
                         <div style="height: 5px"></div>
                         <div class="stats-buttons bar clearfix">
+                                <%--点赞--%>
                             <a style="cursor: pointer;" onclick="upvote_click(${cont.id},1);">
                                 <i class="icon icon-thumbs-o-up icon-2x"></i>
                                 <span class="number hidden" id="up_${cont.id}">${cont.upvote}</span>
                             </a>
                             &nbsp;
+                                <%--踩--%>
                             <a style="cursor: pointer;" onclick="upvote_click(${cont.id},-1);">
                                 <i class="icon icon-thumbs-o-down icon-2x"></i>
                                 <span class="number hidden" id="down_${cont.id}">${cont.downvote}</span>
@@ -225,13 +249,16 @@
                             </a>
                         </div>
                         <div class="single-share">
-                            <a class="share-wechat" data-type="wechat" title="分享到微信" rel="nofollow" style="margin-left:18px;color: grey;cursor: pointer; text-decoration:none;">
+                            <a class="share-wechat" data-type="wechat" title="分享到微信" rel="nofollow"
+                               style="margin-left:18px;color: grey;cursor: pointer; text-decoration:none;">
                                 <i class="icon icon-wechat icon-2x"></i>
                             </a>
-                            <a class="share-qq" data-type="qq" title="分享到QQ" rel="nofollow" style="margin-left:18px;color: grey;cursor: pointer; text-decoration:none;">
+                            <a class="share-qq" data-type="qq" title="分享到QQ" rel="nofollow"
+                               style="margin-left:18px;color: grey;cursor: pointer; text-decoration:none;">
                                 <i class="icon icon-qq icon-2x"></i>
                             </a>
-                            <a  class="share-weibo" data-type="weibo" title="分享到微博" rel="nofollow" style="margin-left:18px;color: grey;cursor: pointer; text-decoration:none;">
+                            <a class="share-weibo" data-type="weibo" title="分享到微博" rel="nofollow"
+                               style="margin-left:18px;color: grey;cursor: pointer; text-decoration:none;">
                                 <i class="icon icon-weibo icon-2x"></i>
                             </a>
                         </div>
@@ -240,8 +267,11 @@
                         <div class="commentAll" style="display:none" id="comment_reply_${cont.id}">
                             <!--评论区域 begin-->
                             <div class="reviewArea clearfix">
-                                <textarea class="content comment-input" placeholder="Please enter a comment&hellip;" onkeyup="keyUP(this)"></textarea>
-                                <a class="plBtn" id="comment_${cont.id}" onclick="_comment(${cont.id},${user.id==null?0:user.id},${cont.uId})" style="color: white;cursor: pointer;">评论</a>
+                                <textarea class="content comment-input" placeholder="Please enter a comment&hellip;"
+                                          onkeyup="keyUP(this)"></textarea>
+                                <a class="plBtn" id="comment_${cont.id}"
+                                   onclick="_comment(${cont.id},${user.id==null?0:user.id},${cont.uId})"
+                                   style="color: white;cursor: pointer;">评论</a>
                             </div>
                             <!--评论区域 end-->
                             <div class="comment-show-first" id="comment-show-${cont.id}">
@@ -262,23 +292,22 @@
             </div>
 
 
-
-
-
-            <div id="page-info" style="position: absolute;width:900px;background-color: #EBEBEB;height: 80px;left: 0px;">
+            <div id="page-info"
+                 style="position: absolute;width:900px;background-color: #EBEBEB;height: 80px;left: 0px;">
                 <ul class="pager pager-loose">
                     <c:if test="${page.pageNum <= 1}">
                         <li><a href="javascript:void(0);">« 上一页</a></li>
                     </c:if>
                     <c:if test="${page.pageNum > 1}">
-                        <li class="previous"><a href="${ctx}/index_list?pageNum=${page.pageNum-1}&&id=${user.id}">« 上一页</a></li>
+                        <li class="previous"><a href="${ctx}/index_list?pageNum=${page.pageNum-1}&&id=${user.id}">«
+                            上一页</a></li>
                     </c:if>
                     <c:forEach begin="1" end="${page.pages}" var="pn">
                         <c:if test="${page.pageNum==pn}">
                             <li class="active"><a href="javascript:void(0);">${pn}</a></li>
                         </c:if>
                         <c:if test="${page.pageNum!=pn}">
-                            <li ><a href="${ctx}/index_list?pageNum=${pn}&&id=${user.id}">${pn}</a></li>
+                            <li><a href="${ctx}/index_list?pageNum=${pn}&&id=${user.id}">${pn}</a></li>
                         </c:if>
                     </c:forEach>
 
@@ -291,7 +320,6 @@
 
                 </ul>
             </div>
-
 
 
             <div class="foot" style="position: absolute;left: 0px;float: left;margin-top: 60px;">
@@ -364,9 +392,10 @@
                         </h3>
                         <ul>
                             <li>
-                                <a href="http://www.dreamland.wang" onMouseOut="hideImg()"  onmouseover="showImg()">
+                                <a href="http://www.dreamland.wang" onMouseOut="hideImg()" onmouseover="showImg()">
                                     微信
-                                    <div id="wxImg" style="display:none;height:50px;back-ground:#f00;position:absolute;">
+                                    <div id="wxImg"
+                                         style="display:none;height:50px;back-ground:#f00;position:absolute;">
                                         <img src="images/dreamland.png"/><br/>
                                         手机扫描二维码关注
                                     </div>
@@ -412,7 +441,8 @@
 
         <div class="col-md-3" style="position:absolute;top:0px;left: 880px;width: 268px;">
             <div style="background-color: white;width: 250px;height: 440px">
-                <iframe name="weather_inc" src="http://i.tianqi.com/index.php?c=code&id=82" width="250" height="440" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+                <iframe name="weather_inc" src="http://i.tianqi.com/index.php?c=code&id=82" width="250" height="440"
+                        frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
             </div>
         </div>
 
@@ -431,19 +461,57 @@
 
 </body>
 <script language=javascript>
-    function  showImg(){
-        document.getElementById("wxImg").style.display='block';
+    function showImg() {
+        document.getElementById("wxImg").style.display = 'block';
     }
-    function hideImg(){
-        document.getElementById("wxImg").style.display='none';
+
+    function hideImg() {
+        document.getElementById("wxImg").style.display = 'none';
     }
+
     function personal(uId) {
-        this.location =  "${ctx}/list?id="+uId;
+        this.location = "${ctx}/list?id=" + uId;
+    }
+
+
+    //点赞，踩
+    function upvote_click(id, cont) {
+        $.ajax({
+            type: 'post',
+            url: '/upvote',
+            date: {"id": id, "uid": '${user.id}', "upvote": cont},
+            dataType: 'json',
+            success: function (data) {
+                var up = data["data"];
+                //alter(up);
+                if (up == "success") {
+                    if (cont == -1) {
+                        var down = document.getElementById("down_" + id);
+                        var num = down.innerHTML;
+                        var value = parseInt(num) + cont;
+                        down.innerHTML = value;
+                    } else {
+                        var num = document.getElementById(id).innerHTML;
+                        var value = parseInt(num) + cont;
+                        document.getElementById(id).innerHTML = value;
+                        document.getElementById("up_" + id).innerHTML = value;
+                    }
+                } else if (up == "done") {
+                    alert("已点赞！")
+
+                } else if (up == "down") {
+                    alert("已踩！")
+                } else {
+                    window.location.href = "/login.jsp";
+                }
+            }
+
+
+        });
     }
 
 
 </script>
-
 
 
 </html>

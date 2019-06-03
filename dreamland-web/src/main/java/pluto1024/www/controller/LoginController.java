@@ -158,4 +158,18 @@ public class LoginController extends BaseController {
         return map;
 
     }
+
+    /**
+     * 退出登录
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping("/loginout")
+    public String exit(Model model) {
+        log.info("退出登录");
+        getSession().removeAttribute("user");
+        getSession().invalidate();//释放资源
+        return "../login";
+    }
 }
