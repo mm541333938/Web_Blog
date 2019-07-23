@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
-@Component
+@Component //注解表明一个类会作为组件类，并告知Spring要为这个类创建bean
 public class BaseController {
     private static final String[] HEADERS_TO_TRY = {
             "X-Forwarded-For",
