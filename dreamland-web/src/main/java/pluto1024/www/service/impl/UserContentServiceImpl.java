@@ -51,9 +51,10 @@ public class UserContentServiceImpl implements UserContentService {
         return null;
     }
 
-    @Override
     public UserContent findById(long id) {
-        return null;
+        UserContent userContent = new UserContent();
+        userContent.setId(id);
+        return userContentMapper.selectOne(userContent);
     }
 
     @Override

@@ -511,6 +511,18 @@
     }
 
 
+    //日期格式化
+    function FormatDate(strTime) {
+        var date = new Date(strTime);
+        var hours = date.getHours();
+        var min = date.getMinutes();
+        if (min < 10) min = "0" + min;
+        var second = date.getSeconds();
+        if (second < 10) second = "0" + second;
+        return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + "-" + hours + "-" + min + "-" + second;
+    }
+
+
 </script>
 
 
