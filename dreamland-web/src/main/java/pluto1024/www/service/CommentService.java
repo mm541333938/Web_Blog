@@ -45,6 +45,15 @@ public interface CommentService {
     List<Comment> findAllFirstComment(Long content_id);
 
     /**
+     * 根据文章id 和子评论ids查询所有子评论
+     *
+     * @param content_id
+     * @param children
+     * @return
+     */
+    List<Comment> findAllChildrenComment(Long content_id, String children);
+
+    /**
      * 根据id删除评论
      *
      * @param id
