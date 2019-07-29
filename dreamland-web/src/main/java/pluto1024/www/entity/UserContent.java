@@ -10,7 +10,7 @@ public class UserContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //自增长策略
     private Long id;
 
-    private Long uId;
+    private Long uid;
 
     private String title;
 
@@ -40,12 +40,12 @@ public class UserContent {
         this.id = id;
     }
 
-    public Long getuId() {
-        return uId;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setuId(Long uId) {
-        this.uId = uId;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
     public String getTitle() {

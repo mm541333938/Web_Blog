@@ -225,7 +225,7 @@
                             <span class="stats-vote"><i id="${cont.id}" class="number">${cont.upvote}</i> 赞</span>
                             <span class="stats-comments">
                     <span class="dash"> · </span>
-                         <a onclick="reply(${cont.id},${cont.uId});">
+                         <a onclick="reply(${cont.id},${cont.uid});">
                               <i class="number" id="comment_num_${cont.id}">${cont.commentNum}</i> 评论
                           </a>
                     </span>
