@@ -8,7 +8,7 @@
     FROM comment c, user u WHERE con_id = #{cid} and c.com_id = u.id ORDER BY id DESC
 </select>
 
-    <resultMap id="pluto1024.www.entity.Comment" type="commentMap">
+    <resultMap type="pluto1024.www.entity.Comment" id="commentMap">
         <id property="id" column="id"/>
         <result property="children" column="children"/>
         <result property="conId" column="con_id"/>
