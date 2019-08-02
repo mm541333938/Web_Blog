@@ -150,7 +150,7 @@
         <c:if test="${empty user}">
             <a name="tj_login" class="lb" href="login?error=login" style="color: black">[登录]</a>
             &nbsp;&nbsp;
-            <a name="tj_login" class="lb" href="register" style="color: black">[注册]</a>
+            <a name="tj_login" class="lb" href="register.jsp" style="color: black">[注册]</a>
         </c:if>
         <c:if test="${not empty user}">
             <a name="tj_loginp" href="javascript:void(0);" class="lb" onclick="personal('${user.id}');"
@@ -274,6 +274,7 @@
                                    style="color: white;cursor: pointer;">评论</a>
                             </div>
                             <!--评论区域 end-->
+                            <!--添加评论内容的空div-->
                             <div class="comment-show-first" id="comment-show-${cont.id}">
 
                             </div>
@@ -522,6 +523,84 @@
         return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + "-" + hours + "-" + min + "-" + second;
     }
 
+    //点击评论或回复图标
+    function reply(id, uid) {
+
+        $("div").remove("#comment_reply_" + id + " .comment-show");
+        $("div").remove("#comment_reply_" + id + " .comment-show-con");
+        if (showdiv_display = document.getElementById('comment_reply_' + id).style.display == 'none') {
+
+            document.getElementById('comment_reply_' + id).style.display = 'block';
+            $.ajax({
+                type: 'post',
+                url: '/reply',
+                data: {"content_id": id},
+                dataType: 'json',
+                success: function (data) {
+                    var list = data["list"];
+                    var okHtml;
+                    if (list != null && list != "") {
+                        $(list).each(function () {
+                            var chtml = "<div class = 'comment-show'>" +
+                                "<div class='comment-show-con clearfix'>" +
+                                "<div class='comment-show-con-img pull-left'><img src=" + this.user.imgUrl + "' alt = ''></div>" +
+                                "<div class = 'comment-show-con-list pull-left clearfix'>" +
+                                "<div class='pl-text clearfix'>" +
+                                "<a class='comment-size-name'>" + this.user.nickName + " :</a>" +
+                                "<span class = 'my-pl-con'>$nbsp;" + this.comContent + "</span>" +
+                                "</div> <div class='date-dz'><span class='date-dz-left pull-left comment-time'>" + FormatDate(this.commTime) + "</span>" +
+                                "<div class='date-dz-right pull-right comment-pl-block'>" +
+                                "<a onclick='deleteComment(" + id + "," + uid + "," + this.id + ", null)' id='comment_dl_" + this.id + "' style='cursor: pointer' class='removeBlock'>删除</a>" +
+                                "<a style='cursor: pointer' onclick='comment_hf_(" + id + "," + this.id + "," + null + "," + this.user.id + "," + uid + ")' id='comment_hf_" + this.id + "' class='date-dz-pl pl-hf hf-con-block pull-left'>回复</a>" +
+                                "<span class='pull-left date-dz-line'>|</span>" +
+                                "<a onclick='reply_up(" + this.id + ")' style='cursor: pointer' class='date-dz-z pull-left' id='change_color_" + this.id + "'><i class='date-dz-z-click-red'></i>赞 (<i class='z-num' id='comment_upvote_" + this.id + "'>" + this.upvote + "</i>)</a>" +
+                                "</div> </div> <div class='hf-list-con' id='hf-list-con-" + this.id + "'>";
+
+                            var ehtml = "</div> </div> </div></div>";
+                            var parentComm_id = this.id;
+
+                            okHtml = chtml;
+                            //alter(this.children)
+                            if (this.children != null && this.children != '') {
+                                var commentList = this.comList;
+                                $(commentList).each(function () {
+                                    // alert(this.id);
+                                    var oHtml = "<div class='all-pl-con'><div class='pl-text hfpl-text clearfix'>" +
+                                        "<a class='comment-size-name'>" + this.user.nickName + "<a class='atName'>@" + this.byUser.nickName + " :</a> </a>" +
+                                        "<span class='my-pl-con'>" + this.comContent + "</span>" +
+                                        "</div><div class='date-dz'> <span class='date-dz-left pull-left comment-time'>" + FormatDate(this.commTime) + "</span>" +
+                                        "<div class='date-dz-right pull-right comment-pl-block'>" +
+                                        "<a style='cursor:pointer' onclick='deleteComment(" + id + "," + uid + "," + this.id + "," + parentComm_id + ")' id='comment_dl_" + this.id + "' class='removeBlock'>删除</a>" +
+                                        "<a onclick='comment_hf(" + id + "," + this.id + "," + parentComm_id + "," + this.user.id + "," + uid + ")' id='comment_hf_" + this.id + "' style='cursor:pointer' class='date-dz-pl pl-hf hf-con-block pull-left'>回复</a> <span class='pull-left date-dz-line'>|</span>" +
+                                        "<a onclick='reply_up(" + this.id + ")' id='change_color_" + this.id + "' style='cursor:pointer' class='date-dz-z pull-left'><i class='date-dz-z-click-red'></i>赞 (<i class='z-num' id='comment_upvote_" + this.id + "'>" + this.upvote + "</i>)</a>" +
+                                        "</div></div> </div>";
+
+                                    okHtml = okHtml + oHtml;
+                                });
+                            }
+                            okHtml = okHtml + ehtml;
+                            $("#comment-show-" + id).append(okHtml);
+
+
+                        });
+                    }
+                }
+            });
+
+
+        } else {
+            document.getElementById('comment_reply_' + id).style.display = 'none';//show的display属性设置为none（隐藏）
+        }
+
+
+    }
+
+    function keyUP(t) {
+        var len = $(t).val().length;
+        if (len > 139) {
+            $(t).val($(t).val().substring(0, 140));
+        }
+    }
 
 </script>
 

@@ -8,14 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pluto1024.www.common.PageHelper.*;
+import pluto1024.www.entity.Comment;
 import pluto1024.www.entity.Upvote;
 import pluto1024.www.entity.User;
 import pluto1024.www.entity.UserContent;
+import pluto1024.www.service.CommentService;
 import pluto1024.www.service.UpvoteService;
 import pluto1024.www.service.UserContentService;
+import pluto1024.www.service.UserService;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -103,5 +107,34 @@ public class IndexJspController extends BaseController {
         map.put("data", "success");
         return map;
     }
+
+    @Autowired
+    private CommentService commentService;
+    @Autowired
+    private UserService userService;
+
+    public Map<String, Object> reply(Model model, @RequestParam(value = "content_id", required = false) Long content_id) {
+        Map map = new HashMap<String, Object>();
+        List<Comment> list = commentService.findAllFirstComment(content_id);
+        if (list != null && list.size() > 0) {
+            for (Comment c : list) {
+                List<Comment> kidList = commentService.findAllChildrenComment(c.getConId(), c.getChildren());
+                if (kidList != null && kidList.size() > 0) {
+                    for (Comment com : kidList) {
+                        if (com.getById() != null) {
+                            User byUser = userService.findById(com.getById());
+                            com.setByUser(byUser);
+                        }
+                    }
+                }
+                c.setComList(kidList);
+            }
+        }
+        map.put("list", list);
+        return map;
+    }
+
+
+
 
 }
