@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import pluto1024.www.common.DateUtils;
 import pluto1024.www.common.PageHelper.*;
 import pluto1024.www.entity.Comment;
 import pluto1024.www.entity.Upvote;
@@ -113,6 +114,8 @@ public class IndexJspController extends BaseController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping("/reply")
+    @ResponseBody
     public Map<String, Object> reply(Model model, @RequestParam(value = "content_id", required = false) Long content_id) {
         Map map = new HashMap<String, Object>();
         List<Comment> list = commentService.findAllFirstComment(content_id);
@@ -135,6 +138,50 @@ public class IndexJspController extends BaseController {
     }
 
 
+    public Map<String, Object> comment(Model model, @RequestParam(value = "id", required = false) Long id,
+                                       @RequestParam(value = "content_id", required = false) Long content_id,
+                                       @RequestParam(value = "uid", required = false) Long uid,
+                                       @RequestParam(value = "by_id", required = false) Long bid,
+                                       @RequestParam(value = "oSize", required = false) String oSize,
+                                       @RequestParam(value = "comment_time", required = false) String comment_time,
+                                       @RequestParam(value = "upvote", required = false) Integer upvote) {
+        Map map = new HashMap<String, Object>();
+        User user = (User) getSession().getAttribute("user");
+        if (user == null) {
+            map.put("date", "fail");
+            return map;
+        }
+        if (id == null) {
+            Date date = DateUtils.StringTODate(comment_time, "yyyy-MM-dd HH:mm:ss");
+            Comment comment = new Comment();
+            comment.setComContent(oSize);
+            comment.setComTime(date);
+            comment.setConId(content_id);
+            comment.setComId(uid);
+            if (upvote == null) {
+                upvote = 0;
+            }
+            comment.setById(bid);
+            comment.setUpvote(upvote);
+            User u = userService.findById(uid);
+            comment.setUser(u);
+            commentService.add(comment);
+            map.put("data", comment);
+
+            UserContent userContent = userContentService.findById(content_id);
+            Integer num = userContent.getCommentNum();
+            userContent.setCommentNum(num + 1);
+            userContentService.updateById(userContent);
+
+        } else {
+            //点赞
+            Comment c = commentService.findById(id);
+            c.setUpvote(upvote);
+            commentService.update(c);
+        }
+        return map;
+
+    }
 
 
 }

@@ -31,7 +31,7 @@
           destroy-method="close">
         <property name="driverClassName" value="${driverClasss}"/>
         <property name="url" value="${jdbcUrl}"/>
-        <property name="username" value="${username}"/>
+        <property name="username" value="${user}"/>
         <property name="password" value="${password}"/>
         <!-- 初始化连接大小 -->
         <property name="initialSize" value="${initialSize}"></property>

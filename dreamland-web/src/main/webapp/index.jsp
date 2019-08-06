@@ -602,6 +602,56 @@
         }
     }
 
+
+    //点击评论按钮
+    function _comment(content_id, uid, cuid) {
+        var myDate = new Date();
+        //获取当前年
+        var year = myDate.getFullYear();
+        //获取当前月
+        var month = myDate.getMonth() + 1;
+        //获取当前日
+        var date = myDate.getDate();
+        var h = myDate.getHours();
+        var m = myDate.getMinutes();
+        if (m < 10) m = '0' + m;
+        var s = myDate.getSeconds();
+        if (s < 10) s = '0' + s;
+        var now = year + '-' + month + "-" + date + " " + h + ':' + m + ":" + s;
+        //获取输入内容
+        var oSize = $("#comment_input_" + content_id).val();
+        console.log(oSize);
+        //动态创建评论模块
+        if (oSize.replace(/(^\s*)|(\s*$)/g, "") != '') {
+
+            $.ajax({
+                type: 'post',
+                url: '/comment',
+                data: {"content_id": content_id, "uid": uid, "oSize": oSize, "comment_time": now}
+                dataType: 'json',
+                success: function (data) {
+                    var comm_data = data["data"];
+                    if (comm_data == "fail") {
+                        window.location.href = "/login.jsp"
+                    } else {
+                        var id = comm_data.id;
+                        oHtml = '\'<div class="comment-show-con clearfix"><div class="comment-show-con-img pull-left"><img src="${user.imgUrl}" alt=""></div> <div class="comment-show-con-list pull-left clearfix"><div class="pl-text clearfix"> <a  class="comment-size-name">${user.nickName} : </a> <span class="my-pl-con">&nbsp;\'+ oSize +\'</span> </div> <div class="date-dz"> <span class="date-dz-left pull-left comment-time">\'+now+\'</span> <div class="date-dz-right pull-right comment-pl-block"><a style="cursor:pointer"  onclick="deleteComment(\'+content_id+\',\'+cuid+\',\'+id+\',\'+null+\')" id="comment_dl_\'+id+\'"  class="removeBlock">删除</a> <a style="cursor:pointer" onclick="comment_hf(\'+content_id+\',\'+id+\',\'+null+\',\'+comm_data.user.id+\',\'+cuid+\')" id="comment_hf_\'+id+\'" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span class="pull-left date-dz-line">|</span> <a onclick="reply_up(\'+id+\')" id="change_color_\'+id+\'" style="cursor:pointer"  class="date-dz-z pull-left" ><i class="date-dz-z-click-red"></i>赞 (<i class="z-num" id="comment_upvote_\'+id+\'">0</i>)</a> </div> </div><div class="hf-list-con"></div></div> </div>\';'
+                        $("#comment_" + content_id).parents('.reviewArea').siblings('.comment-show-first').prepend(oHtml);
+                        $("#comment_" + content_id).siblings('.flex-text-wrap').find('.comment-input').prop('value', '').siblings('pre').find('span').text('');
+
+                        $("#comment_input_" + content_id.val(''));
+
+                        var num = document.getElementById("comment_num_" + content_id).innerHTML;
+                        document.getElementById("comment_num_" + content_id).innerHTML = (parseInt(num) + 1) + "";
+
+                    }
+                }
+            });
+
+
+        }
+    }
+
 </script>
 
 
