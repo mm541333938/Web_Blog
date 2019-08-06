@@ -627,7 +627,7 @@
             $.ajax({
                 type: 'post',
                 url: '/comment',
-                data: {"content_id": content_id, "uid": uid, "oSize": oSize, "comment_time": now}
+                data: {"content_id": content_id, "uid": uid, "oSize": oSize, "comment_time": now},
                 dataType: 'json',
                 success: function (data) {
                     var comm_data = data["data"];
@@ -649,6 +649,49 @@
             });
 
 
+        }
+    }
+
+
+    //删除评论块
+    function deleteComment(con_id, uid, id, fid) {
+
+        if ('${user.id}' == uid) {
+            if (!confirm("确定要删除？")) {
+                window.event.returnValue = false;
+            } else {
+                // 发送ajax请求
+                $.ajax({
+                    type: 'post',
+                    url: '/deleteComment',
+                    data: {"id": id, "uid": uid, "con_id": con_id, "fid": fid},
+                    dataType: 'json',
+                    success: function (data) {
+                        var comm_data = data["data"];
+                        if (comm_data == "fail") {
+                            window.location.href = "/login.jsp";
+
+                        } else if (comm_data == "no-access") {
+
+                        } else {
+                            var oThis = $("#comment_dl_" + id);
+                            var oT = oThis.parents('.date-dz-right').parents('.date-dz').parents('.all-pl-con');
+                            if (oT.siblings('.all-pl-con').length >= 1) {
+                                oT.remove();
+                            } else {
+                                oThis.parents('.date-dz-right').parents('.date-dz').parents('.all-pl-con').parents('.hf-list-con').css('display', 'none')
+                                oT.remove();
+                            }
+                            oThis.parents('.date-dz-right').parents('.date-dz').parents('.comment-show-con-list').parents('.comment-show-con').remove();
+
+
+                            //评论数comment_num_con_id
+                            document.getElementById("comment_num_" + con_id).innerHTML = parseInt(comm_data) + "";
+
+                        }
+                    }
+                });
+            }
         }
     }
 

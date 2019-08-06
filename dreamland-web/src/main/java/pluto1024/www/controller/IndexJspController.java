@@ -1,5 +1,6 @@
 package pluto1024.www.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +19,7 @@ import pluto1024.www.service.UpvoteService;
 import pluto1024.www.service.UserContentService;
 import pluto1024.www.service.UserService;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class IndexJspController extends BaseController {
@@ -137,7 +135,8 @@ public class IndexJspController extends BaseController {
         return map;
     }
 
-
+    @RequestMapping("/comment")
+    @ResponseBody
     public Map<String, Object> comment(Model model, @RequestParam(value = "id", required = false) Long id,
                                        @RequestParam(value = "content_id", required = false) Long content_id,
                                        @RequestParam(value = "uid", required = false) Long uid,
@@ -183,5 +182,30 @@ public class IndexJspController extends BaseController {
 
     }
 
+    @RequestMapping("/deleteComment")
+    @ResponseBody
+    public Map<String, Object> deleteComment(Model model, @RequestParam(value = "id", required = false) Long id,
+                                             @RequestParam(value = "uid", required = false) Long uid,
+                                             @RequestParam(value = "con_id", required = false) Long con_id,
+                                             @RequestParam(value = "fid", required = false) Long fid) {
 
+        int num = 0;
+        Map map = new HashMap<String, Object>();
+        User user = (User) getSession().getAttribute("user");
+        if (user == null) {
+            map.put("data", "fail");
+        } else {
+            if (user.getId().equals(uid)) {
+                Comment comment = commentService.findById(id);
+                if (StringUtils.isBlank(comment.getChildren())) {
+                    if (fid != null) {
+                        Comment fcomm = commentService.findById(fid);
+
+
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }
