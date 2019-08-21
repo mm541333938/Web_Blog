@@ -695,6 +695,123 @@
         }
     }
 
+    //一级评论   点击回复创建回复模块
+    function comment_hf(content_id, comment_id, fid, by_id, cuid) {
+        //alert(cuid)
+        //获取回复人的名字
+        var oThis = $("#comment_hf_" + comment_id);
+        var fhName = oThis.parents('.date-dz-right').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').html();
+        //回复@
+        var fhN = '回复@' + fhName;
+        var fhHtml = '<div class="hf-con pull-left"> <textarea id="plcaceholder_' + comment_id + '"  class="content comment-input " placeholder="' + fhN + '" onkeyup="keyUP(this)"></textarea> <a id="comment_pl_' + comment_id + '" onclick="comment_pl(' + content_id + ',' + comment_id + ',' + fid + ',' + by_id + ',' + cuid + ')" class="hf-pl" style="color: white;cursor:pointer">评论</a></div>';
+        //显示回复
+        if (oThis.is('.hf-con-block')) {
+            oThis.parents('.date-dz-right').parents('.date-dz').append(fhHtml);
+            oThis.removeClass('hf-con-block');
+            $('.content').flexText();
+            oThis.parents('.date-dz-right').siblings('.hf-con').find('.pre').css('padding', '6px 15px');
+
+            //input框自动聚焦
+            oThis.parents('.date-dz-right').siblings('.hf-con').find('.hf-input').val('').focus().val(fhN);
+
+        } else {
+            oThis.addClass('hf-con-block');
+            oThis.parents('.date-dz-right').siblings('.hf-con').remove();
+        }
+    }
+
+    //点赞
+    function reply_up(id) {
+        var num = document.getElementById("comment_upvote_" + id).innerHTML;
+        if ($("#change_color_" + id).is('.date-dz-z-click')) {
+            num--;
+            $("#change_color_" + id).removeClass('date-dz-z-click red');
+            $("#change_color_" + id).find('.z-num').html(num);
+            $("#change_color_" + id).find('.date-dz-z-click-red').removeClass('red');
+
+        } else {
+            num++;
+            $("#change_color_" + id).addClass('date-dz-z-click');
+            $("#change_color_" + id).find('.z-num').html(num);
+            $("#change_color_" + id).find('.date-dz-z-click-red').addClass('red');
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/comment',
+            data: {"id": id, "upvote": num},
+            dataType: 'json',
+            success: function (data) {
+                var comm_data = data["data"];
+                if (comm_data == "fail") {
+                    window.location.href = "/login.jsp";
+                }
+            }
+        });
+    }
+
+
+    //点击一级评论块的评论按钮
+    function comment_pl(content_id, comment_id, fid, by_id, cuid) {
+        if (fid == null) {
+            fid = comment_id;
+        }
+        var oThis = $("#comment_pl_" + comment_id);
+        var myDate = new Date();
+        //获取当前年
+        var year = myDate.getFullYear();
+        //获取当前月
+        var month = myDate.getMonth() + 1;
+        //获取当前日
+        var date = myDate.getDate();
+        var h = myDate.getHours();       //获取当前小时数(0-23)
+        var m = myDate.getMinutes();     //获取当前分钟数(0-59)
+        if (m < 10) m = '0' + m;
+        var s = myDate.getSeconds();
+        if (s < 10) s = '0' + s;
+        var now = year + '-' + month + "-" + date + " " + h + ':' + m + ":" + s;
+        //获取输入内容
+        var oHfVal = oThis.siblings('.flex-text-wrap').find('.comment-input').val();
+        console.log(oHfVal)
+        var oHfName = oThis.parents('.hf-con').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').html();
+        //alert(oHfName)
+        var oAllVal = '回复@' + oHfName;
+
+        if (oHfVal.replace(/^ +| +$/g, '') == '' || oHfVal == oAllVal) {
+
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '/comment_child',
+                data: {
+                    "content_id": content_id,
+                    "uid": '${user.id}',
+                    "oSize": oHfVal,
+                    "comment_time": now,
+                    "by_id": by_id,
+                    "id": fid
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var comm_data = data["data"];
+                    //alert(comm_data);
+                    if (comm_data == "fail") {
+                        window.location.href = "/login.jsp";
+                    } else {
+                        var id = comm_data.id;
+                        //alert(id)
+                        var oAt = '回复<a class="atName">@' + oHfName + '</a>  ' + oHfVal;
+                        var oHtml = '<div class="all-pl-con"><div class="pl-text hfpl-text clearfix"><a class="comment-size-name">${user.nickName} : </a><span class="my-pl-con">' + oAt + '</span></div><div class="date-dz"> <span class="date-dz-left pull-left comment-time">' + now + '</span> <div class="date-dz-right pull-right comment-pl-block"> <a style="cursor:pointer" onclick="deleteComment(' + content_id + ',' + cuid + ',' + id + ',' + fid + ')" id="comment_dl_' + id + '" class="removeBlock">删除</a> <a onclick="comment_hf(' + content_id + ',' + id + ',' + fid + ',' + comm_data.user.id + ',' + cuid + ')" id="comment_hf_' + id + '" style="cursor:pointer" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span class="pull-left date-dz-line">|</span> <a onclick="reply_up(' + id + ')" id="change_color_' + id + '" style="cursor:pointer" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num" id="comment_upvote_' + id + '">0</i>)</a> </div> </div></div>';
+                        $("#comment_pl_" + comment_id).parents('.hf-con').parents('.comment-show-con-list').find('.hf-list-con').css('display', 'block').prepend(oHtml) && oThis.parents('.hf-con').siblings('.date-dz-right').find('.pl-hf').addClass('hf-con-block') && oThis.parents('.hf-con').remove();
+
+                        var num = document.getElementById("comment_num_" + content_id).innerHTML;
+                        document.getElementById("comment_num_" + content_id).innerHTML = (parseInt(num) + 1) + "";
+                    }
+                }
+            });
+        }
+    }
+
 </script>
 
 

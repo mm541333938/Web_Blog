@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pluto1024.www.common.DateUtils;
 import pluto1024.www.common.PageHelper.*;
+import pluto1024.www.common.StringUtil;
 import pluto1024.www.entity.Comment;
 import pluto1024.www.entity.Upvote;
 import pluto1024.www.entity.User;
@@ -200,12 +201,81 @@ public class IndexJspController extends BaseController {
                 if (StringUtils.isBlank(comment.getChildren())) {
                     if (fid != null) {
                         Comment fcomm = commentService.findById(fid);
-
-
+                        String child = StringUtil.getString(fcomm.getChildren(), id);
+                        fcomm.setChildren(child);
+                        commentService.update(fcomm);
                     }
+                    commentService.deleteById(id);
+                    num += 1;
+                } else {
+                    String children = comment.getChildren();
+                    commentService.deleteChildrenComment(children);
+                    String[] arr = children.split(",");
+                    commentService.deleteById(id);
+                    num = num + arr.length + 1;
                 }
+                UserContent content = userContentService.findById(con_id);
+                if (content != null) {
+                    if (content.getCommentNum() - num >= 0) {
+                        content.setCommentNum(content.getCommentNum() - num);
+                    } else {
+                        content.setCommentNum(0);
+                    }
+                    userContentService.updateById(content);
+                }
+                map.put("data", content.getCommentNum());
+            } else {
+                map.put("data", "no-access");
             }
         }
-        return null;
+        return map;
     }
+
+
+    public Map<String, Object> addCommentChild(Model model, @RequestParam(value = "id", required = false) Long id,
+                                               @RequestParam(value = "content_id", required = false) Long content_id,
+                                               @RequestParam(value = "uid", required = false) Long uid,
+                                               @RequestParam(value = "by_id", required = false) Long bid,
+                                               @RequestParam(value = "oSize", required = false) String oSize,
+                                               @RequestParam(value = "comment_time", required = false) String comment_time,
+                                               @RequestParam(value = "upvote", required = false) Integer upvote) {
+
+        Map map = new HashMap<String, Object>();
+        User user = (User) getSession().getAttribute("user");
+        if (user == null) {
+            map.put("data", "fail");
+            return map;
+        }
+        Date date = DateUtils.StringTODate(comment_time, "yyyy-MM-dd HH:mm:ss");
+
+        Comment comment = new Comment();
+        comment.setComContent(oSize);
+        comment.setComTime(date);
+        comment.setConId(content_id);
+        comment.setComId(uid);
+        if (upvote == null) {
+            upvote = 0;
+        }
+        comment.setById(id);
+        comment.setUpvote(upvote);
+        User u = userService.findById(id);
+        comment.setUser(u);
+        commentService.add(comment);
+
+        Comment com = commentService.findById(id);
+        if (StringUtils.isBlank(com.getChildren())) {
+            com.setChildren(comment.getId().toString());
+        } else {
+            com.setChildren(com.getChildren() + "," + comment.getId());
+        }
+        commentService.update(com);
+        map.put("data", comment);
+        UserContent userContent = userContentService.findById(content_id);
+        Integer num = userContent.getCommentNum();
+        userContent.setCommentNum(num + 1);
+        userContentService.updateById(userContent);
+        return map;
+    }
+
+
 }
